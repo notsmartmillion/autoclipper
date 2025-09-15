@@ -16,6 +16,11 @@ def poll_creators():
 
 
 @shared_task
+def ping() -> str:
+    return "pong"
+
+
+@shared_task
 def process_video(video_id: int):
     """
     Main pipeline for one video:

@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from app.routes import admin
+from app.routes import admin, webhooks
 
 
 def create_app() -> FastAPI:
@@ -11,6 +11,7 @@ def create_app() -> FastAPI:
         return {"ok": True}
 
     application.include_router(admin.router)
+    application.include_router(webhooks.router)
     return application
 
 
