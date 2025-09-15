@@ -1,0 +1,13 @@
+title_style: "hyper, caps on hook, no clickbait words"
+watermark: "assets/watermarks/speed.png"
+intro_bumper: "assets/intro_2s.mp4"
+outro_bumper: "assets/outro_2s.mp4"
+thumbnail:
+  template: "assets/thumb_templates/bold_text.psd"
+  max_words: 5
+  avoid_words: ["insane","crazy"]
+length:
+  min: 18
+  max: 58
+safety:
+  banlists: ["slur1","slur2"]

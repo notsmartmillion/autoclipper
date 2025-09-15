@@ -1,0 +1,12 @@
+title_style: "concise, hook in first 3s"
+watermark: null
+intro_bumper: null
+outro_bumper: null
+thumbnail:
+  template: null
+  max_words: 6
+length:
+  min: 18
+  max: 60
+safety:
+  banlists: []

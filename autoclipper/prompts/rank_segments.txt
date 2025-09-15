@@ -1,0 +1,5 @@
+You are selecting SHORTS-worthy moments. Prefer:
+- immediate hook in first 3 seconds
+- self-contained moment with setup + payoff
+- strong emotion, surprise, laugh
+Return top N segments as JSON: [{"start":s,"end":e,"reason":"...","title":"..."}]

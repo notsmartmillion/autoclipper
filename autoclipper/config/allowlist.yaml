@@ -1,0 +1,17 @@
+creators:
+  - handle: ispeeddemo
+    platform: youtube
+    source_url: https://www.youtube.com/@ispeeddemo
+    license_type: campaign
+    post_channel_id: UCxxxxx_clips
+    brand_preset: speed_preset_v2
+    max_daily: 8
+    shorts_only: true
+    enabled: true
+  - handle: example_streamer
+    platform: twitch
+    source_url: https://www.twitch.tv/example
+    license_type: contract
+    post_channel_id: UCyyyyy_clips
+    shorts_only: true
+    enabled: true

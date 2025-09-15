@@ -1,0 +1,23 @@
+[project]
+name = "autoclipper"
+version = "0.1.0"
+dependencies = [
+  "fastapi", "uvicorn[standard]",
+  "pydantic-settings",
+  "SQLAlchemy>=2.0", "psycopg[binary]",
+  "celery[redis]", "redis",
+  "httpx", "tenacity",
+  "python-dotenv",
+  "boto3",                # S3/B2
+  "moviepy", "opencv-python", "pyscenedetect",
+  "ffmpeg-python",
+  "whisperx @ git+https://github.com/m-bain/whisperX",  # or openai-whisper
+  "openai",              # for LLM metadata/ranking
+  "numpy", "pandas",
+  "pydub",
+  "pyyaml",
+  "google-api-python-client", "google-auth-oauthlib", "google-auth-httplib2",
+  "yt-dlp",
+  "pillow",
+  "sentry-sdk",
+]
