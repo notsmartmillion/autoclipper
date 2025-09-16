@@ -8,6 +8,8 @@ from __future__ import annotations
 
 import os
 from celery import shared_task, chain
+from app.settings import S
+from app.queues import celery_app  # noqa: F401  (import for side effects)
 
 # Fetching & ingest
 from app.services.fetcher.youtube import list_new_videos, fetch_video_media
@@ -104,6 +106,11 @@ def process_video(video_id: str) -> list[dict]:
         clip = render_clip(media_path, transcript_text, seg)
         clip_records.append(clip)
 
+    if not S.publish_enabled:
+        print(f"[SAFE MODE] Finished processing {video_id}, rendered {len(clip_records)} clips. Upload skipped.")
+    else:
+        print(f"[LIVE MODE] Finished processing {video_id}, rendered {len(clip_records)} clips. Upload will be enqueued.")
+
     return clip_records
 
 
@@ -111,17 +118,17 @@ def process_video(video_id: str) -> list[dict]:
 def publish_clip(clip: dict) -> dict:
     """
     Upload one rendered clip to YouTube as UNLISTED, then schedule a flip to PUBLIC.
-    NOTE: In the stub uploader we use API key creation; real uploads will require OAuth.
-    Returns:
-      {"video_id": "...", "url": "https://youtu.be/..."}
+    Respects publish_enabled flag (safe mode).
     """
+    if not S.publish_enabled:
+        print(f"[SAFE MODE] Skipping upload for clip {clip.get('clip_id')} ({clip.get('path')})")
+        return {"status": "skipped", "clip": clip}
+
     uploaded = upload_short(clip, visibility="unlisted")
 
     # Schedule a claim check / flip to public after a 30 min hold.
-    # (Current stub just flips after the delay; replace with real claim polling when OAuth is added.)
     check_claim_then_publish.apply_async(args=[uploaded["video_id"]], countdown=1800)
     return uploaded
-
 
 @shared_task
 def publish_many(clips: list[dict]) -> list[str]:

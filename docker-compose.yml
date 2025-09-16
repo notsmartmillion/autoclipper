@@ -1,35 +1,68 @@
 version: "3.9"
+
 services:
   api:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     env_file: .env
-    volumes: [".:/workspace"]
-    depends_on: [db, redis]
-    ports: ["8000:8000"]
+    volumes:
+      - .:/workspace
+    working_dir: /workspace
+    depends_on:
+      - redis
+      # - db   # uncomment if you're actually using Postgres now
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
 
   worker:
-    build: .
-    command: celery -A app.queues.celery_app worker -l INFO --concurrency=4
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: >
+      celery -A app.queues.celery_app worker
+      --loglevel=info
+      -Q celery,cpu
+      --concurrency=4
     env_file: .env
-    volumes: [".:/workspace"]
-    depends_on: [api, db, redis]
+    volumes:
+      - .:/workspace
+    working_dir: /workspace
+    depends_on:
+      - redis
+      # - db
+    restart: unless-stopped
+    gpus: all
 
   beat:
-    build: .
-    command: celery -A app.queues.celery_app beat -l INFO
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: celery -A app.queues.celery_app beat --loglevel=info
     env_file: .env
-    volumes: [".:/workspace"]
-    depends_on: [worker]
+    volumes:
+      - .:/workspace
+    working_dir: /workspace
+    depends_on:
+      - redis
+      # - db
+    restart: unless-stopped
 
+  # comment this whole block if you're staying no-DB for now
   db:
     image: postgres:15
     environment:
       POSTGRES_DB: autoclipper
       POSTGRES_USER: autoclipper
       POSTGRES_PASSWORD: autoclipper
-    ports: ["5432:5432"]
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
 
   redis:
     image: redis:7
-    ports: ["6379:6379"]
+    ports:
+      - "6379:6379"
+    restart: unless-stopped

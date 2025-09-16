@@ -9,7 +9,7 @@ dependencies = [
   "httpx", "tenacity",
   "python-dotenv",
   "boto3",                # S3/B2
-  "moviepy", "opencv-python", "pyscenedetect",
+  "moviepy", "opencv-python", "scenedetect",
   "ffmpeg-python",
   "whisperx @ git+https://github.com/m-bain/whisperX",  # or openai-whisper
   "openai",              # for LLM metadata/ranking
@@ -21,3 +21,10 @@ dependencies = [
   "pillow",
   "sentry-sdk",
 ]
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["app*", "infra*", "config*", "prompts*"]

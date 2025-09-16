@@ -9,19 +9,23 @@ from __future__ import annotations
 from celery import Celery
 from celery.schedules import crontab
 
-from app.settings import Settings
+from app.settings import S as settings
 
-settings = Settings()
-
-# Create Celery app using Redis from your Settings
+# Create Celery app using broker/backend from Settings (with sane fallbacks)
 celery_app = Celery(
     "autoclipper",
-    broker=settings.redis_url,
-    backend=settings.redis_url,
+    broker=settings.broker_url,
+    backend=settings.result_backend,
 )
+
+# 👇 ensure this app becomes the global default for @shared_task bindings
+celery_app.set_default()
 
 # Autodiscover tasks inside app.workers.* so you don't need to list modules manually
 celery_app.autodiscover_tasks(["app.workers"])
+
+# Retry connecting to the broker on startup (container may start before Redis is ready)
+celery_app.conf.broker_connection_retry_on_startup = True
 
 # Task routing: keep your CPU queue for heavy steps, default for light steps
 celery_app.conf.task_routes = {

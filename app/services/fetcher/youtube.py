@@ -1,7 +1,7 @@
 import httpx, re, subprocess
 from pathlib import Path
 from app.services.intake.allowlist_manager import iter_enabled_creators
-from app.settings import S
+from app.settings import Settings as S
 
 STATE_DIR = Path("tmp/state"); STATE_DIR.mkdir(parents=True, exist_ok=True)
 SEEN_FILE = STATE_DIR / "seen_videos.txt"
