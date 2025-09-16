@@ -1,0 +1,14 @@
+campaigns:
+  - creator_handle: example_streamer
+    platform: twitch
+    source_url: https://www.twitch.tv/example_streamer
+    terms:
+      license_type: campaign
+      payout_model: views_cpm
+      min_cpm_usd: 3
+      shorts_allowed: true
+      brand_requirements: ["no slurs", "no medical claims"]
+    posting:
+      post_channel_id: UCyourClipsChannel
+      max_daily: 5
+      shorts_only: true

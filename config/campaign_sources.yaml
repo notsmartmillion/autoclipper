@@ -1,0 +1,10 @@
+providers:
+  - type: static
+    path: config/campaigns_static.yaml
+
+  - type: json_feed
+    url: https://example.com/campaigns.json
+
+  # (Optional) RSS:
+  # - type: rss
+  #   url: https://example.com/announcements.rss
