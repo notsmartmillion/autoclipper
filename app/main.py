@@ -10,6 +10,10 @@ def create_app() -> FastAPI:
     def health():
         return {"ok": True}
 
+    @application.get("/healthz")
+    def healthz():
+        return {"ok": True}
+
     application.include_router(admin.router)
     application.include_router(webhooks.router)
     return application

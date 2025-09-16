@@ -76,6 +76,15 @@ def publish_clip(clip: dict):
     return check_claim_then_publish.s(uploaded["video_id"]).apply_async(countdown=1800)
 
 
+@shared_task
+def publish_many(clips: list[dict]) -> list[str]:
+    video_ids: list[str] = []
+    for clip in clips:
+        res = publish_clip.delay(clip)
+        video_ids.append(res.id)
+    return video_ids
+
+
 
 def enqueue_video_pipeline(video_id: int):
-    chain(process_video.s(video_id), publish_clip.chord())()
+    chain(process_video.s(video_id), publish_many.s())()

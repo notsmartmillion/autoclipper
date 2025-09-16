@@ -1,5 +1,12 @@
 from fastapi import APIRouter
+
 router = APIRouter(prefix="/admin")
+
+
+@router.get("/ping")
+def ping_admin():
+    return {"msg": "admin ok"}
+
 
 @router.post("/rescan")
 def rescan():
@@ -7,7 +14,8 @@ def rescan():
     poll_creators.delay()
     return {"ok": True}
 
+
 @router.get("/creators")
 def list_creators():
     # return allowlist + db status
-    pass
+    return {"creators": []}
